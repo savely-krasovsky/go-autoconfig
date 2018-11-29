@@ -1,6 +1,6 @@
 service_addr: ":1323"
 
-domain: lord.sh
+domain: example.com
 
 imap:
   server: imap.mailbox.org
