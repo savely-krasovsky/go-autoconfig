@@ -1,0 +1,11 @@
+service_addr: ":1323"
+
+domain: lord.sh
+
+imap:
+  server: imap.mailbox.org
+  port: 993
+
+smtp:
+  server: smtp.mailbox.org
+  port: 465
