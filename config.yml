@@ -3,9 +3,9 @@ service_addr: ":1323"
 domain: example.com
 
 imap:
-  server: imap.mailbox.org
+  server: imap.example.com
   port: 993
 
 smtp:
-  server: smtp.mailbox.org
+  server: smtp.example.com
   port: 465
