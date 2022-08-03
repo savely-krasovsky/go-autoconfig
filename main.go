@@ -3,14 +3,15 @@ package main // import "go-autoconfig"
 import (
 	"flag"
 	"fmt"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
-	"go-autoconfig/config"
-	"go-autoconfig/handlers"
 	"io"
 	"os"
 	"path/filepath"
 	"text/template"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"go-autoconfig/config"
+	"go-autoconfig/handlers"
 )
 
 var path = flag.String(

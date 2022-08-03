@@ -1,9 +1,10 @@
 package config
 
 import (
+	"io/ioutil"
+
 	"gopkg.in/go-playground/validator.v9"
 	"gopkg.in/yaml.v2"
-	"io/ioutil"
 )
 
 type Config struct {
