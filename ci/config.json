@@ -1,0 +1,11 @@
+{
+  "listen": ":8080",
+  "rate_limit_per_minute": 0,
+  "enable_apple": false,
+  "domains": {
+    "example.com": {
+      "imap": {"host": "imap.example.com", "port": 993, "starttls": false},
+      "smtp": {"host": "smtp.example.com", "port": 465, "starttls": false}
+    }
+  }
+}

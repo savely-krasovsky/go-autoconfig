@@ -1,5 +1,14 @@
 # jetbrains goland
 .idea
 
-# go modules
-go.sum
+# build artifacts
+/autoconfig
+*.test
+coverage.out
+
+# local deployment config
+/deploy/config.json
+.playwright-mcp/
+
+# local planning notes
+plan/

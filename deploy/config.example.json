@@ -1,0 +1,18 @@
+{
+  "listen": ":8080",
+  "rate_limit_per_minute": 60,
+  "trust_proxy": true,
+  "enable_apple": false,
+  "domains": {
+    "example.com": {
+      "display_name": "Example Mail",
+      "imap": {"host": "imap.example.com", "port": 993, "starttls": false},
+      "smtp": {"host": "smtp.example.com", "port": 587, "starttls": true}
+    },
+    "example.org": {
+      "display_name": "Example Mail",
+      "imap": {"host": "mail.example.org", "port": 993, "starttls": false},
+      "smtp": {"host": "mail.example.org", "port": 587, "starttls": true}
+    }
+  }
+}

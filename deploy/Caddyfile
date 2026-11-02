@@ -1,0 +1,29 @@
+{
+	email {$ACME_EMAIL}
+	admin off
+}
+
+(autoconfig) {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+		X-Frame-Options "DENY"
+		-Server
+	}
+
+	reverse_proxy autoconfig:8080 {
+		# Overwrite a client-supplied X-Forwarded-For so trust_proxy cannot be spoofed.
+		header_up X-Forwarded-For {remote_host}
+	}
+}
+
+example.com, autoconfig.example.com, autodiscover.example.com {
+	import autoconfig
+}
+
+example.org, autoconfig.example.org, autodiscover.example.org {
+	import autoconfig
+}

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.DisplayName}} — mail settings</title>
+<style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: #f5f6f8; color: #1c2330; }
+main { max-width: 760px; margin: 0 auto; padding: 32px 20px 48px; }
+h1 { font-size: 1.8rem; margin: 0 0 4px; }
+h2 { font-size: 1.15rem; margin: 28px 0 10px; }
+p { margin: 6px 0; }
+.lead { color: #4a5568; }
+.card { background: #fff; border: 1px solid #dde2ea; border-radius: 10px; padding: 18px 20px; margin-top: 14px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px 10px 8px 0; vertical-align: top; border-bottom: 1px solid #edf0f5; }
+thead th { font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: #64748b; }
+tbody th { width: 30%; font-weight: 600; }
+code { background: #eef1f6; border-radius: 4px; padding: 1px 5px; }
+details { border-top: 1px solid #edf0f5; padding: 10px 0; }
+details:first-of-type { border-top: 0; }
+summary { cursor: pointer; font-weight: 600; }
+footer { margin-top: 32px; color: #64748b; font-size: .9rem; }
+a { color: #0b63ce; }
+@media (prefers-color-scheme: dark) {
+  body { background: #10151c; color: #e6eaf0; }
+  .lead, footer { color: #9aa7b8; }
+  .card { background: #171e27; border-color: #2a3442; }
+  th, td, details { border-color: #232c38; }
+  code { background: #232c38; }
+  a { color: #6cb0ff; }
+}
+</style>
+</head>
+<body>
+<main>
+<h1>{{.DisplayName}}</h1>
+<p class="lead">Mail settings for <strong>{{.Domain}}</strong>. Use your full email address as the username.</p>
+
+<section class="card">
+<h2>Automatic setup</h2>
+<p><strong>Thunderbird:</strong> <a href="/mail/config-v1.1.xml">automatic configuration</a>.</p>
+<p><strong>Outlook:</strong> add the account with your email address and password; Autodiscover finds the servers automatically.</p>
+{{if .AppleEnabled}}
+<p><strong>Apple Mail:</strong> <a href="/email.mobileconfig">install the configuration profile</a>, then replace the placeholder address.</p>
+{{else}}
+<p><strong>Apple Mail:</strong> automatic profile is disabled on this server; use the manual settings below.</p>
+{{end}}
+</section>
+
+<section class="card">
+<h2>Manual setup</h2>
+<table>
+<thead>
+<tr><th></th><th>Incoming (IMAP)</th><th>Outgoing (SMTP)</th></tr>
+</thead>
+<tbody>
+<tr><th>Server</th><td>{{.IMAP.Host}}</td><td>{{.SMTP.Host}}</td></tr>
+<tr><th>Port</th><td>{{.IMAP.Port}}</td><td>{{.SMTP.Port}}</td></tr>
+<tr><th>Security</th><td>{{.IMAP.Security}}</td><td>{{.SMTP.Security}}</td></tr>
+<tr><th>Username</th><td colspan="2">your full email address</td></tr>
+<tr><th>Password</th><td colspan="2">your mailbox password</td></tr>
+</tbody>
+</table>
+<p>For <code>SSL</code> use the port as shown. For <code>STARTTLS</code> the client upgrades the connection automatically.</p>
+</section>
+
+<section class="card">
+<h2>Client notes</h2>
+<details>
+<summary>Outlook 2016 / 2019 / 365 (Windows)</summary>
+<p>File → Add Account, enter the email address and password, and keep automatic configuration enabled. For diagnostics use <em>Test E-mail AutoConfiguration</em> (Ctrl + right-click the Outlook tray icon).</p>
+</details>
+<details>
+<summary>Thunderbird</summary>
+<p>Account Setup → enter name, email and password → <em>Configure manually</em> only if detection fails. Use the IMAP/SMTP values above.</p>
+</details>
+<details>
+<summary>Apple Mail (macOS / iOS)</summary>
+<p>Add an IMAP account with the values above. If a configuration profile is available, install it and replace the placeholder address with your own.</p>
+</details>
+<details>
+<summary>Android (K-9 Mail / FairEmail)</summary>
+<p>Choose IMAP, enter the values above, and allow the client to discover settings from the domain if prompted.</p>
+</details>
+</section>
+
+<footer>
+<p>Project <strong>{{.Project}}</strong>, version <strong>{{.Version}}</strong>.</p>
+<p><a href="/healthz">health</a> · <a href="/version">version</a></p>
+</footer>
+</main>
+</body>
+</html>

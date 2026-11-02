@@ -1,0 +1,17 @@
+.git
+.github
+.gitignore
+.idea
+Dockerfile
+.dockerignore
+README.md
+LICENSE
+plan
+docs
+ci
+scripts
+**/*_test.go
+handlers/testdata
+config.example.json
+deploy
+docs

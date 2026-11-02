@@ -1,0 +1,22 @@
+{
+  "listen": ":8080",
+  "pprof_listen": "",
+  "rate_limit_per_minute": 0,
+  "trust_proxy": false,
+  "enable_apple": false,
+  "domains": {
+    "example.com": {
+      "display_name": "Example Mail",
+      "imap": {
+        "host": "imap.example.com",
+        "port": 993,
+        "starttls": false
+      },
+      "smtp": {
+        "host": "smtp.example.com",
+        "port": 587,
+        "starttls": true
+      }
+    }
+  }
+}

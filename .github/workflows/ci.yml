@@ -1,0 +1,100 @@
+name: ci
+
+on:
+  push:
+    branches: [master, modernize]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.27.3"
+          cache: true
+
+      - name: Build
+        run: go build ./...
+
+      - name: Test
+        run: go test -race ./...
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Staticcheck
+        run: go run honnef.co/go/tools/cmd/staticcheck@v0.8.2 ./...
+
+      - name: Govulncheck
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 ./...
+
+      - name: Fuzz smoke
+        run: |
+          go test ./handlers -run '^$' -fuzz=FuzzOutlookBody -fuzztime=10s
+          go test ./handlers -run '^$' -fuzz=FuzzRequestHost -fuzztime=5s
+
+      - name: Validate fixtures
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libxml2-utils
+          xmllint --noout handlers/testdata/outlook.xml handlers/testdata/thunderbird.xml
+          python3 scripts/validate_fixtures.py
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true
+          tags: go-autoconfig:ci
+          build-args: |
+            VERSION=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Smoke test container
+        run: |
+          docker run --detach --name autoconfig \
+            --publish 18080:8080 \
+            --read-only \
+            --cap-drop ALL \
+            --security-opt no-new-privileges \
+            --pids-limit 64 \
+            --memory 128m \
+            --cpus 1 \
+            --mount type=bind,src="$PWD/ci/config.json",dst=/etc/autoconfig/config.json,readonly \
+            go-autoconfig:ci
+          for attempt in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:18080/healthz; then
+              exit 0
+            fi
+            sleep 1
+          done
+          docker logs autoconfig
+          exit 1
+
+      - name: Container log
+        if: always()
+        run: docker rm -f autoconfig >/dev/null 2>&1 || true
+
+      - name: SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          image: go-autoconfig:ci
+          artifact-name: go-autoconfig.spdx.json
